@@ -29,6 +29,7 @@
   let placeSearch = null;
   let currentCityName = "杭州市";
   let pendingCurrentLocation = null;
+  let pendingSelectedLocation = null;
   let pendingDefaultCenter = false;
 
   const statusEl = document.getElementById("mapStatus");
@@ -381,6 +382,16 @@
     stabilizeInitialView(DEFAULT_CENTER);
   }
 
+  function setSelectedLocation(longitude, latitude) {
+    if (!window.AMap || !map) {
+      pendingSelectedLocation = { longitude, latitude };
+      return;
+    }
+    const point = [longitude, latitude];
+    selectedMarker = updateMarker(selectedMarker, point, "selected");
+    map.setZoomAndCenter(defaultZoom, point);
+  }
+
   function applyPendingMapActions() {
     if (pendingDefaultCenter) {
       pendingDefaultCenter = false;
@@ -390,6 +401,11 @@
       const location = pendingCurrentLocation;
       pendingCurrentLocation = null;
       setCurrentLocation(location.longitude, location.latitude, location.recenter);
+    }
+    if (pendingSelectedLocation) {
+      const location = pendingSelectedLocation;
+      pendingSelectedLocation = null;
+      setSelectedLocation(location.longitude, location.latitude);
     }
   }
 
@@ -407,6 +423,7 @@
     setTheme,
     search,
     setCurrentLocation,
+    setSelectedLocation,
     showDefaultCenter,
   };
 

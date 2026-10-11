@@ -2,13 +2,13 @@
 
 中文 | [English](README.en.md)
 
-**版本：1.0.0** · **协议：GPL-3.0-or-later** · [GitHub](https://github.com/affirmatives/PinShift)
+**版本：1.0.1** · **协议：GPL-3.0-or-later** · [GitHub](https://github.com/affirmatives/PinShift)
 
 在 Mac 上选一个地图位置，通过 USB 将它设置为 iPhone 的模拟定位(虚拟定位)。
 
 PinShift 使用 PySide6 构建桌面界面，内嵌高德地图 JavaScript API 2.0，并通过 [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) 与设备通信，适合在自己的设备上开发和测试位置相关功能。
 
-当前版本为 1.0.0，仅支持 macOS、USB 连接和单台设备，尚未建立完整的 macOS / iOS 兼容性矩阵。应用界面目前为中文；英文文档不代表已有英文界面。
+当前版本为 1.0.1，仅支持 macOS、USB 连接和单台设备，尚未建立完整的 macOS / iOS 兼容性矩阵。应用界面目前为中文；英文文档不代表已有英文界面。
 
 ## 功能
 
@@ -48,7 +48,7 @@ PinShift 使用 PySide6 构建桌面界面，内嵌高德地图 JavaScript API 2
 
 ## 下载应用
 
-从 [GitHub Releases](https://github.com/affirmatives/PinShift/releases) 下载 `PinShift-1.0.0-macos-arm64.dmg`，打开后拖入“应用程序”。安装包已包含运行依赖，无需安装 Python。
+从 [GitHub Releases](https://github.com/affirmatives/PinShift/releases) 下载 `PinShift-1.0.1-macos-arm64.dmg`，打开后拖入“应用程序”。安装包已包含运行依赖，无需安装 Python。
 
 当前包仅适用于 **Apple 芯片 Mac**，采用 ad-hoc 签名，尚未公证；macOS 可能拦截下载后的首次启动。首次使用仍需填写自己的高德凭据，并按下文完成设备连接。Intel Mac 暂无预构建安装包。
 
@@ -89,11 +89,13 @@ python main.py
 1. 启动应用并完成地图配置。
 2. USB 连接一台 iPhone，解锁并选择“信任此电脑”；按设备要求启用开发者模式。
 3. 点击“扫描设备”，确认设备信息。
-4. 搜索地点并选择结果，或直接点击地图，确认经纬度。
+4. 搜索地点并选择结果、直接点击地图，或在左侧输入经度和纬度（经度范围 -180～180，纬度范围 -90～90）。地图选点会同步填入输入框。
 5. 点击“设置虚拟定位”，查看操作结果。
 6. 使用结束后点击“清除虚拟定位”，并在设备上确认定位已恢复。
 
 地图选点和界面坐标使用 GCJ-02，发送到 iPhone 前转换为 WGS-84。Mac CoreLocation 坐标先从 WGS-84 转为 GCJ-02 再显示。转换采用近似算法，不适用于高精度测绘。
+
+手动输入采用相同坐标约定：国内坐标填写 GCJ-02，境外坐标使用 WGS-84 并保持原值。例如白宫填写经度 `-77.036546`、纬度 `38.897660`。点击“设置虚拟定位”后会更新选点并尝试设置设备位置；即使高德海外详细地图不可用，也可输入坐标设置定位。
 
 ### iOS 17+ 与管理员授权
 
@@ -161,7 +163,7 @@ bash packaging/build_macos.sh
 bash packaging/create_dmg.sh
 ```
 
-输出为 `dist/PinShift.app` 和 `dist/PinShift.dmg`。构建脚本先收集依赖许可和版本清单，再从 `PinShift.spec` 打包，包含 `web/`、`assets/`、许可证和版权声明，使用 `assets/PinShift.icns`，写入 1.0.0 版本、版权及定位权限说明，并进行 ad-hoc 签名及验证。脚本会覆盖对应构建产物。
+输出为 `dist/PinShift.app` 和 `dist/PinShift.dmg`。构建脚本先收集依赖许可和版本清单，再从 `PinShift.spec` 打包，包含 `web/`、`assets/`、许可证和版权声明，使用 `assets/PinShift.icns`，写入 1.0.1 版本、版权及定位权限说明，并进行 ad-hoc 签名及验证。脚本会覆盖对应构建产物。
 
 当前流程未配置 Developer ID 签名和 Apple 公证，不能承诺下载后通过 Gatekeeper 检查。不同处理器架构需分别构建和测试，脚本不生成 universal binary。直接使用 `PinShift.spec` 打包不包含脚本的签名后处理，优先使用上述脚本。
 
@@ -184,7 +186,7 @@ bash packaging/create_dmg.sh
 
 - 作者：[affirmatives](https://github.com/affirmatives)。
 - 项目地址：[affirmatives/PinShift](https://github.com/affirmatives/PinShift)。
-- 版本：**1.0.0**。
+- 版本：**1.0.1**。
 - 版权：Copyright (C) 2026 affirmatives。
 - 开源协议：**GNU General Public License v3.0 or later（GPL-3.0-or-later）**。
 

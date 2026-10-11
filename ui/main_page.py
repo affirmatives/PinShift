@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+import math
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -14,6 +15,7 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMessageBox,
     QPushButton,
     QSplitter,
@@ -82,6 +84,12 @@ class MainPage(QWidget):
 
         self.longitude_label = QLabel("经度：-")
         self.latitude_label = QLabel("纬度：-")
+        self.longitude_input = QLineEdit()
+        self.longitude_input.setPlaceholderText("经度（-180 ～ 180）")
+        self.latitude_input = QLineEdit()
+        self.latitude_input.setPlaceholderText("纬度（-90 ～ 90）")
+        self.longitude_input.setAccessibleName("经度")
+        self.latitude_input.setAccessibleName("纬度")
         self.status_widget = StatusBarWidget()
         self.log_panel = LogPanel()
 
@@ -118,6 +126,12 @@ class MainPage(QWidget):
         actions.addWidget(self.scan_button)
         actions.addSpacing(8)
         actions.addWidget(section("虚拟定位"))
+        coordinate_inputs = QGridLayout()
+        coordinate_inputs.addWidget(QLabel("经度"), 0, 0)
+        coordinate_inputs.addWidget(self.longitude_input, 0, 1)
+        coordinate_inputs.addWidget(QLabel("纬度"), 1, 0)
+        coordinate_inputs.addWidget(self.latitude_input, 1, 1)
+        actions.addLayout(coordinate_inputs)
         actions.addWidget(self.set_button)
         actions.addWidget(self.clear_button)
         actions.addSpacing(8)
@@ -201,6 +215,10 @@ class MainPage(QWidget):
         self.status_widget.set_device("已连接" if ok else "未检测到设备", self.device)
 
     def on_point_selected(self, longitude: float, latitude: float) -> None:
+        self._save_selected_point(longitude, latitude)
+        self.add_log(f"地图点击选点：{longitude:.6f}, {latitude:.6f}")
+
+    def _save_selected_point(self, longitude: float, latitude: float) -> None:
         self.longitude = longitude
         self.latitude = latitude
         self._update_coordinate_labels()
@@ -208,7 +226,6 @@ class MainPage(QWidget):
             self.config.settings.last_longitude = longitude
             self.config.settings.last_latitude = latitude
             self.config.save()
-        self.add_log(f"地图点击选点：{longitude:.6f}, {latitude:.6f}")
 
     def on_current_location(self, longitude: float, latitude: float) -> None:
         self.current_longitude = longitude
@@ -228,6 +245,19 @@ class MainPage(QWidget):
         self.location_service_mac.request_location()
 
     def set_virtual_location(self) -> None:
+        try:
+            longitude = float(self.longitude_input.text().strip())
+            latitude = float(self.latitude_input.text().strip())
+            if not (math.isfinite(longitude) and math.isfinite(latitude)
+                    and -180 <= longitude <= 180 and -90 <= latitude <= 90):
+                raise ValueError
+        except ValueError:
+            QMessageBox.warning(self, "坐标无效", "请输入有效的经度（-180 ～ 180）和纬度（-90 ～ 90）。")
+            return
+        self._save_selected_point(longitude, latitude)
+        self.map_view.page().runJavaScript(
+            self._map_call_js("setSelectedLocation", f"{longitude!r}, {latitude!r}")
+        )
         self.add_log("开始设置虚拟定位。")
         future = self.executor.submit(self.location_service.set_location, self.device, self.longitude, self.latitude)
         future.add_done_callback(lambda f: self._emit_action_result("set", f))
@@ -271,6 +301,8 @@ class MainPage(QWidget):
         lat = "-" if self.latitude is None else f"{self.latitude:.6f}"
         self.longitude_label.setText(f"经度：{lng}")
         self.latitude_label.setText(f"纬度：{lat}")
+        self.longitude_input.setText("" if self.longitude is None else str(self.longitude))
+        self.latitude_input.setText("" if self.latitude is None else str(self.latitude))
 
     def _grant_web_permission(self, security_origin: QUrl, feature: QWebEnginePage.Feature) -> None:
         if feature == QWebEnginePage.Feature.Geolocation:

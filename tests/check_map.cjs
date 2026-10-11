@@ -8,13 +8,14 @@ async function check(query, expectedCenter) {
   let options;
   const selected = [];
   const styles = [];
+  const centers = [];
   const bridge = { log() {}, selectPoint: (...point) => selected.push(point) };
   const poi = { id: 'result', name: '地点', location: { getLng: () => 120.1, getLat: () => 30.2 } };
   const amap = {
     Map: class {
       constructor(id, config) { options = config; }
       setMapStyle(style) { styles.push(style); }
-      on() {} off() {} resize() {} setZoomAndCenter() {} add() {}
+      on() {} off() {} resize() {} setZoomAndCenter(zoom, point) { centers.push(Array.from(point)); } add() {}
       getCity(callback) { callback({ city: '杭州市' }); }
     },
     Marker: class { setPosition() {} },
@@ -37,6 +38,9 @@ async function check(query, expectedCenter) {
   assert.deepEqual(styles, ['amap://styles/dark', 'amap://styles/normal']);
   assert.deepEqual(Array.from(options.center), expectedCenter);
   await window.PinShiftMap.search('地点');
+  assert.deepEqual(selected, [[120.1, 30.2]]);
+  window.PinShiftMap.setSelectedLocation(-77.036546, 38.897660);
+  assert.deepEqual(centers.at(-1), [-77.036546, 38.897660]);
   assert.deepEqual(selected, [[120.1, 30.2]]);
 }
 (async () => {

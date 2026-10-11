@@ -2,13 +2,13 @@
 
 [中文](README.md) | English
 
-**Version: 1.0.0** · **License: GPL-3.0-or-later** · [GitHub](https://github.com/affirmatives/PinShift)
+**Version: 1.0.1** · **License: GPL-3.0-or-later** · [GitHub](https://github.com/affirmatives/PinShift)
 
 Choose a location on your Mac and set it as your iPhone's simulated location over USB.
 
 PinShift is a PySide6 desktop application with an embedded AMap JavaScript API 2.0 map. It uses [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) to communicate with devices, for developing and testing location features on your own devices.
 
-Version 1.0.0 supports macOS, USB connections, and one device at a time. A comprehensive macOS / iOS compatibility matrix is not available yet. The UI is currently in Chinese; English documentation does not imply an English UI.
+Version 1.0.1 supports macOS, USB connections, and one device at a time. A comprehensive macOS / iOS compatibility matrix is not available yet. The UI is currently in Chinese; English documentation does not imply an English UI.
 
 ## Features
 
@@ -46,7 +46,7 @@ See [requirements.txt](requirements.txt). Dependencies have lower bounds and are
 
 ## Download the app
 
-Download `PinShift-1.0.0-macos-arm64.dmg` from [GitHub Releases](https://github.com/affirmatives/PinShift/releases), open it, and drag PinShift into Applications. Runtime dependencies are bundled; Python installation is not required.
+Download `PinShift-1.0.1-macos-arm64.dmg` from [GitHub Releases](https://github.com/affirmatives/PinShift/releases), open it, and drag PinShift into Applications. Runtime dependencies are bundled; Python installation is not required.
 
 The package supports **Apple Silicon Macs only**, uses an ad-hoc signature, and is not notarized. macOS may block its first launch after download. Supply your own AMap credentials and follow the device setup below. No prebuilt Intel Mac package is currently provided.
 
@@ -87,11 +87,13 @@ Each user should supply their own credentials and follow AMap's terms and quota 
 1. Launch PinShift and configure the map.
 2. Connect one iPhone over USB, unlock it, and choose “Trust This Computer.” Enable Developer Mode as required.
 3. Click “扫描设备” (Scan devices) and confirm the device information.
-4. Search and select a result, or click the map. Check the coordinates.
+4. Search and select a result, click the map, or enter longitude and latitude in the left sidebar (longitude: -180 to 180; latitude: -90 to 90). Map selections also populate these fields.
 5. Click “设置虚拟定位” (Set simulated location) and check the result.
 6. When finished, click “清除虚拟定位” (Clear simulated location) and confirm that location has returned to normal on the device.
 
 Map selections and displayed coordinates use GCJ-02 and are converted to WGS-84 before being sent to the iPhone. Mac CoreLocation coordinates are converted from WGS-84 to GCJ-02 for display. Conversion is approximate and unsuitable for precision surveying.
+
+Manual entry follows the same convention: use GCJ-02 within China and WGS-84 abroad, where coordinates pass through unchanged. For the White House, enter longitude `-77.036546` and latitude `38.897660`. Clicking “设置虚拟定位” updates the selected point and attempts to set the device location. Coordinate entry works even when detailed overseas AMap tiles are unavailable.
 
 ### iOS 17+ and administrator authorization
 
@@ -159,7 +161,7 @@ bash packaging/build_macos.sh
 bash packaging/create_dmg.sh
 ```
 
-Outputs are `dist/PinShift.app` and `dist/PinShift.dmg`. The build script collects dependency notices and versions, then uses `PinShift.spec` and bundles `web/`, `assets/`, the license and copyright notices, uses `assets/PinShift.icns`, writes version 1.0.0, copyright and location permission descriptions, and applies and verifies an ad-hoc signature. Scripts overwrite their corresponding build outputs.
+Outputs are `dist/PinShift.app` and `dist/PinShift.dmg`. The build script collects dependency notices and versions, then uses `PinShift.spec` and bundles `web/`, `assets/`, the license and copyright notices, uses `assets/PinShift.icns`, writes version 1.0.1, copyright and location permission descriptions, and applies and verifies an ad-hoc signature. Scripts overwrite their corresponding build outputs.
 
 Developer ID signing and Apple notarization are not configured, so downloaded builds are not guaranteed to pass Gatekeeper. Build and test processor architectures separately; the script does not produce a universal binary. Building directly from `PinShift.spec` omits the script’s signing post-processing; prefer the commands above.
 
@@ -182,7 +184,7 @@ Report problems through GitHub Issues or propose improvements through Pull Reque
 
 - Author: [affirmatives](https://github.com/affirmatives).
 - Project: [affirmatives/PinShift](https://github.com/affirmatives/PinShift).
-- Version: **1.0.0**.
+- Version: **1.0.1**.
 - Copyright (C) 2026 affirmatives.
 - License: **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.
 

@@ -3,10 +3,11 @@ from __future__ import annotations
 import os
 import sys
 import tempfile
+from concurrent.futures import Future
 from pathlib import Path
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 from config.app_config import AppConfig
 from models.app_settings import AppSettings
@@ -64,8 +65,42 @@ def finish():
 
 
 def start():
+    page = window.main_page
+    original_executor = page.executor
+    calls = []
+    class MockExecutor:
+        def submit(self, method, *args):
+            calls.append(args)
+            result = Future()
+            result.set_result((True, '模拟定位成功'))
+            return result
+    page.executor = MockExecutor()
+    original_warning = QMessageBox.warning
+    warnings = []
+    QMessageBox.warning = lambda *args: warnings.append(args)
+    try:
+        page.longitude_input.setText('-77.036546')
+        page.latitude_input.setText('38.897660')
+        page.set_button.click()
+        assert calls == [(None, -77.036546, 38.897660)]
+        assert AppConfig.load().settings.last_longitude == -77.036546
+        for longitude, latitude in [('', '0'), ('nan', '0'), ('181', '0'), ('0', '-91'), ('0', 'inf')]:
+            page.longitude_input.setText(longitude)
+            page.latitude_input.setText(latitude)
+            page.set_button.click()
+        assert len(calls) == 1
+        assert len(warnings) == 5
+        page.longitude_input.setText('0')
+        page.latitude_input.setText('0')
+        page.set_button.click()
+        assert calls[-1] == (None, 0.0, 0.0)
+    finally:
+        page.executor = original_executor
+        QMessageBox.warning = original_warning
     window.grab().save('/private/tmp/pinshift-light.png')
     window.main_page.on_point_selected(121.5, 31.2)
+    assert page.longitude_input.text() == '121.5'
+    assert page.latitude_input.text() == '31.2'
     window.night_button.click()
     QTimer.singleShot(400, lambda: window.main_page.web_page.runJavaScript(
         'document.documentElement.dataset.theme', inspect_dark))
