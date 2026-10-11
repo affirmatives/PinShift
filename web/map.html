@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PinShift Map</title>
+    <link rel="stylesheet" href="./map.css" />
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+  </head>
+  <body>
+    <div id="searchPanel">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <input id="searchInput" placeholder="搜索地点，例如“浙江大学”" />
+          <button id="clearSearchButton" title="清空搜索">×</button>
+        </div>
+        <button id="searchButton">搜索</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+    <div id="map"></div>
+    <button id="locateButton" title="回到当前位置">◎</button>
+    <div id="mapStatus">地图初始化中...</div>
+    <script src="./map.js"></script>
+  </body>
+</html>

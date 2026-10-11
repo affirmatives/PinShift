@@ -1,0 +1,36 @@
+# Python environments and caches
+.venv
+.venv-*
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# Build output (keep PinShift.spec tracked)
+build/
+dist/
+.pyinstaller-cache/
+*.app/
+*.dmg
+
+# macOS and editors
+.DS_Store
+._*
+.idea/
+.vscode/
+*.swp
+
+# Local credentials, configuration, and device sessions
+.env
+.env.*
+!.env.example
+settings.json
+location_helper*.json
+location_helper.pid
+*.log
