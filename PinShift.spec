@@ -15,6 +15,7 @@ a = Analysis(
         ('LICENSE', '.'),
         ('COPYRIGHT', '.'),
         ('THIRD_PARTY_NOTICES.md', '.'),
+        ('build/third-party-licenses', 'third-party-licenses'),
     ],
     hiddenimports=[],
     hookspath=[],

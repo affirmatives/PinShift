@@ -17,6 +17,19 @@ PinShift 原创代码和文档采用 **GPL-3.0-or-later**，不替代第三方�
 
 ## Distribution / 分发
 
+The build script collects installed dependency license and notice files into
+`Contents/Resources/third-party-licenses/` inside the application. It also
+includes official Qt and Python license texts from `licenses/upstream/`, with
+their source URLs recorded in `SOURCES.json`. The directory contains a build
+environment inventory and exact version snapshot; it includes build tools and
+optional packages and is not a claim that every listed package is loaded.
+
+构建脚本将已安装依赖提供的许可和声明文件收集到应用内的
+`Contents/Resources/third-party-licenses/`，同时包含 `licenses/upstream/`
+中的 Qt、Python 等官方许可材料，并在 `SOURCES.json` 中记录来源。
+其中包含构建环境清单及精确版本快照，也会列出构建工具和可选依赖。
+不能将清单视为每个组件均会被应用加载的声明。
+
 When distributing a binary, provide the corresponding source for that build
 under the GPL, preserve applicable third-party license texts and copyright
 notices, and review the licenses of all bundled dependencies and Qt modules.

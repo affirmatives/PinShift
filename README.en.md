@@ -44,6 +44,12 @@ Settings page
 
 See [requirements.txt](requirements.txt). Dependencies have lower bounds and are not locked. Device services require pymobiledevice3's asynchronous APIs; not every combination satisfying these lower bounds has been verified.
 
+## Download the app
+
+Download `PinShift-1.0.0-macos-arm64.dmg` from [GitHub Releases](https://github.com/affirmatives/PinShift/releases), open it, and drag PinShift into Applications. Runtime dependencies are bundled; Python installation is not required.
+
+The package supports **Apple Silicon Macs only**, uses an ad-hoc signature, and is not notarized. macOS may block its first launch after download. Supply your own AMap credentials and follow the device setup below. No prebuilt Intel Mac package is currently provided.
+
 ## Run from source
 
 Download or clone the source, then run from the project root:
@@ -153,7 +159,7 @@ bash packaging/build_macos.sh
 bash packaging/create_dmg.sh
 ```
 
-Outputs are `dist/PinShift.app` and `dist/PinShift.dmg`. The build script uses `PinShift.spec`, bundles `web/`, `assets/`, the license and copyright notices, uses `assets/PinShift.icns`, writes version 1.0.0, copyright and location permission descriptions, and applies and verifies an ad-hoc signature. Scripts overwrite their corresponding build outputs.
+Outputs are `dist/PinShift.app` and `dist/PinShift.dmg`. The build script collects dependency notices and versions, then uses `PinShift.spec` and bundles `web/`, `assets/`, the license and copyright notices, uses `assets/PinShift.icns`, writes version 1.0.0, copyright and location permission descriptions, and applies and verifies an ad-hoc signature. Scripts overwrite their corresponding build outputs.
 
 Developer ID signing and Apple notarization are not configured, so downloaded builds are not guaranteed to pass Gatekeeper. Build and test processor architectures separately; the script does not produce a universal binary. Building directly from `PinShift.spec` omits the script’s signing post-processing; prefer the commands above.
 
@@ -175,14 +181,14 @@ Report problems through GitHub Issues or propose improvements through Pull Reque
 ## Author and license
 
 - Author: [affirmatives](https://github.com/affirmatives).
-- Project: [affirmatives/PinShift](https://github.com/affirmatives/PinShift) (planned repository URL, available after upload).
+- Project: [affirmatives/PinShift](https://github.com/affirmatives/PinShift).
 - Version: **1.0.0**.
 - Copyright (C) 2026 affirmatives.
 - License: **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.
 
 You may use, modify, and redistribute this project under GPL version 3 or any later version. When distributing the application or modified versions, comply with the GPL, including providing corresponding source and preserving license and copyright notices. The software is provided without warranty.
 
-See [LICENSE](LICENSE) for the full terms, [COPYRIGHT](COPYRIGHT) for the project grant, and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for dependencies and map content. Third-party content retains its original rights and licenses; screenshots do not change the licensing of AMap content. Review licenses of the actual bundled components and validate release packages before public distribution.
+See [LICENSE](LICENSE) for the full terms, [COPYRIGHT](COPYRIGHT) for the project grant, and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for dependencies and map content. Third-party content retains its original rights and licenses; screenshots do not change the licensing of AMap content. Collected third-party notices and build dependency records are included in the app; recheck applicable licenses when upgrading dependencies.
 
 ## Acknowledgments
 

@@ -67,7 +67,7 @@ bash packaging/create_dmg.sh
 ```
 
 - 优先使用脚本：从 `PinShift.spec` 构建后执行 ad-hoc 签名和验证；单独构建 spec 不包含脚本的签名后处理。
-- `config/app_info.py` 集中维护版本、作者、版权和链接；`PinShift.spec` 使用这些信息写入版本及版权，并包含定位权限说明与许可证文件。版本变更同步更新两份 README。
+- `config/app_info.py` 集中维护版本、作者、版权和链接；`PinShift.spec` 使用这些信息写入版本及版权，并包含定位权限说明与许可证文件。构建脚本通过 `packaging/collect_licenses.py` 收集第三方许可和构建版本；直接构建 spec 前应先运行收集脚本。版本变更同步更新两份 README。
 - 产物位于 `dist/`，不提交到源码仓库；构建会覆盖对应产物。
 - 当前没有 Developer ID 签名、公证或 universal binary。发布说明只列实际验证的系统和架构。
 - 不凭空添加仓库地址、下载链接、CI 徽章、已发布版本或兼容性承诺。

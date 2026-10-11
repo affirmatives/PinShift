@@ -8,6 +8,7 @@ export PYINSTALLER_CONFIG_DIR="${PYINSTALLER_CONFIG_DIR:-$ROOT_DIR/.pyinstaller-
 APP_NAME="PinShift"
 # Qt and PyInstaller must see the same environment path when .venv is a symlink.
 BUILD_PYTHON="$(python -c 'from pathlib import Path; import sys; print(Path(sys.prefix).resolve() / "bin" / Path(sys.executable).name)')"
+"$BUILD_PYTHON" packaging/collect_licenses.py
 "$BUILD_PYTHON" -m PyInstaller --clean --noconfirm PinShift.spec
 
 codesign --force --sign - "dist/${APP_NAME}.app"

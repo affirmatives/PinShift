@@ -46,6 +46,12 @@ PinShift 使用 PySide6 构建桌面界面，内嵌高德地图 JavaScript API 2
 
 依赖见 [requirements.txt](requirements.txt)。依赖使用最低版本约束，尚未锁定；设备服务依赖 pymobiledevice3 的异步 API，不能据此认为所有满足版本下限的组合都已验证。
 
+## 下载应用
+
+从 [GitHub Releases](https://github.com/affirmatives/PinShift/releases) 下载 `PinShift-1.0.0-macos-arm64.dmg`，打开后拖入“应用程序”。安装包已包含运行依赖，无需安装 Python。
+
+当前包仅适用于 **Apple 芯片 Mac**，采用 ad-hoc 签名，尚未公证；macOS 可能拦截下载后的首次启动。首次使用仍需填写自己的高德凭据，并按下文完成设备连接。Intel Mac 暂无预构建安装包。
+
 ## 从源码运行
 
 下载或克隆源码后，在项目根目录执行：
@@ -155,7 +161,7 @@ bash packaging/build_macos.sh
 bash packaging/create_dmg.sh
 ```
 
-输出为 `dist/PinShift.app` 和 `dist/PinShift.dmg`。构建脚本从 `PinShift.spec` 打包，包含 `web/`、`assets/`、许可证和版权声明，使用 `assets/PinShift.icns`，写入 1.0.0 版本、版权及定位权限说明，并进行 ad-hoc 签名及验证。脚本会覆盖对应构建产物。
+输出为 `dist/PinShift.app` 和 `dist/PinShift.dmg`。构建脚本先收集依赖许可和版本清单，再从 `PinShift.spec` 打包，包含 `web/`、`assets/`、许可证和版权声明，使用 `assets/PinShift.icns`，写入 1.0.0 版本、版权及定位权限说明，并进行 ad-hoc 签名及验证。脚本会覆盖对应构建产物。
 
 当前流程未配置 Developer ID 签名和 Apple 公证，不能承诺下载后通过 Gatekeeper 检查。不同处理器架构需分别构建和测试，脚本不生成 universal binary。直接使用 `PinShift.spec` 打包不包含脚本的签名后处理，优先使用上述脚本。
 
@@ -177,14 +183,14 @@ bash packaging/create_dmg.sh
 ## 作者与许可证
 
 - 作者：[affirmatives](https://github.com/affirmatives)。
-- 项目地址：[affirmatives/PinShift](https://github.com/affirmatives/PinShift)（预设仓库地址，上传后生效）。
+- 项目地址：[affirmatives/PinShift](https://github.com/affirmatives/PinShift)。
 - 版本：**1.0.0**。
 - 版权：Copyright (C) 2026 affirmatives。
 - 开源协议：**GNU General Public License v3.0 or later（GPL-3.0-or-later）**。
 
 你可以依照 GPL 第 3 版或任何后续版本使用、修改及再分发本项目。分发应用或修改版本时，须遵守 GPL，包括提供对应源码、保留许可和版权声明。软件按现状提供，不附带任何担保。
 
-完整协议见 [LICENSE](LICENSE)，项目授权声明见 [COPYRIGHT](COPYRIGHT)，第三方组件及地图内容说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。第三方内容保留其原有版权及许可，地图截图不改变高德内容的授权范围。公开分发前仍需核对实际打包组件的许可并验证发布包。
+完整协议见 [LICENSE](LICENSE)，项目授权声明见 [COPYRIGHT](COPYRIGHT)，第三方组件及地图内容说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。第三方内容保留其原有版权及许可，地图截图不改变高德内容的授权范围。应用包中附带已收集的第三方许可和构建依赖记录；升级依赖时须重新核对适用许可。
 
 ## 致谢
 
